@@ -2,9 +2,6 @@
 
 namespace PiHole;
 
-use BadMethodCallException;
-use ErrorException;
-use GuzzleHttp\Exception\ClientException;
 use PiHole\Interfaces\QueryInterface;
 
 /**
@@ -14,26 +11,21 @@ use PiHole\Interfaces\QueryInterface;
  */
 class Client implements QueryInterface
 {
-    use HttpTrait, CoreTrait;
-
-    /**
-     * @var string
-     */
-    protected $namespace = __NAMESPACE__ . '\\Endpoints';
+    use HttpTrait;
 
     /**
      * Type of query
      *
      * @var string
      */
-    protected $type;
+    protected $type = 'get';
 
     /**
      * Endpoint of query
      *
-     * @var string
+     * @var array
      */
-    protected $endpoint;
+    protected $endpoint = [];
 
     /**
      * If auth is required
@@ -66,5 +58,63 @@ class Client implements QueryInterface
 
         // Store the client object
         $this->client = new \GuzzleHttp\Client($config->guzzle());
+    }
+
+    /**
+     * Get detailed statistic of system
+     *
+     * @return \PiHole\Interfaces\QueryInterface
+     */
+    public function statistics(): QueryInterface
+    {
+        return $this;
+    }
+
+    /**
+     * Get version of Pi Hole
+     *
+     * @return \PiHole\Interfaces\QueryInterface
+     * @link ?version
+     */
+    public function version(): QueryInterface
+    {
+        $this->endpoint = ['version' => null];
+        return $this;
+    }
+
+    /**
+     * Enable pihole (should be authorized)
+     *
+     * @return \PiHole\Interfaces\QueryInterface
+     * @link ?enable&auth=webpassword
+     */
+    public function enable(): QueryInterface
+    {
+        $this->endpoint = ['enable' => null];
+        return $this;
+    }
+
+    /**
+     * Disable pihole (should be authorized)
+     *
+     * @return \PiHole\Interfaces\QueryInterface
+     * @link ?disable&auth=webpassword
+     */
+    public function disable(): QueryInterface
+    {
+        $this->endpoint = ['disable' => null];
+        return $this;
+    }
+
+    /**
+     * Logout from pihole (should be authorized)
+     *
+     * @return \PiHole\Interfaces\QueryInterface
+     * @link ?logout&auth=webpassword
+     */
+    public function logout(): QueryInterface
+    {
+        $this->endpoint = ['logout' => null];
+        return $this;
     }
 }

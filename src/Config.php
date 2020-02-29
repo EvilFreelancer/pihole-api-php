@@ -42,7 +42,7 @@ class Config
      *
      * @param array $parameters List of parameters which can be set on object creation stage
      *
-     * @throws \ErrorException
+     * @throws \InvalidArgumentException
      */
     public function __construct(array $parameters = [])
     {
@@ -89,6 +89,7 @@ class Config
      * @param string $name Name of parameter
      *
      * @return bool
+     * @throws \InvalidArgumentException
      */
     public function __isset($name): bool
     {
